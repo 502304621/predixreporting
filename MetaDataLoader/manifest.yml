@@ -1,0 +1,8 @@
+---
+applications:
+  - name: predix-tool-metadetadataloader-0.0.1
+    buildpack: java_buildpack
+    path: target/MetaDataLoader-0.0.1.jar
+services:
+    - predix-poc-postgres-service-instance 
+    - predix-tool-redis-sv 

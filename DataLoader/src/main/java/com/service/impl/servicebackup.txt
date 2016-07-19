@@ -1,0 +1,229 @@
+package com.service.impl;
+
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.neo4j.cypher.internal.compatibility.exceptionHandlerFor2_2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
+import com.Util.Utility;
+import com.model.ClientJdbcDaoSupport;
+import com.model.DatabaseMapper;
+import com.model.JDBCTemplate;
+import com.service.intf.DataLoaderServiceIntf;
+
+import redis.clients.jedis.Jedis;
+import org.codehaus.jackson.*;
+import redis.clients.jedis.*;
+
+import argo.jdom.*;
+import argo.jdom.JsonNode;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Protocol;
+public class DataLoaderServiceImpl implements DataLoaderServiceIntf {
+
+	@Autowired
+	protected JdbcTemplate jdbc;
+	protected ClientJdbcDaoSupport dao = new com.model.ClientJdbcDaoSupport();
+	static Jedis jedis = new Jedis("localhost");
+	static String metaDataLoader = "";
+	static String SQLQuery = "";
+	static String objectName = "";
+
+	public List loadData(JDBCTemplate jdbcObject) {
+		System.out.print("We are in the all users method");
+		jdbc = getJDBCConnection(jdbcObject);
+		System.out.println("jdbc:postgresql://" + jdbcObject.getHost() + ":" + jdbcObject.getPort() + "/ "
+				+ jdbcObject.getDatabase() + " " + jdbcObject.getUsername() + " " + jdbcObject.getPassword());
+		getMetaDataLoader(jdbcObject.getUsername());
+		objectName = jdbcObject.getDatabase() + "_" + jdbcObject.getUsername();
+		SQLQuery = jdbcObject.getSql();
+		System.out.println("SQLQuery " + SQLQuery);
+		// String inIds =
+		// StringUtils.arrayToCommaDelimitedString(ObjectUtils.toObjectArray(ids));
+		/// return jdbc.query("SELECT * FROM sb_user", userMapper);
+		return jdbc.query(SQLQuery, dataInfoMapper);
+	}
+
+	private static final RowMapper dataInfoMapper = new RowMapper() {
+		public HashMap<String, HashMap<String, HashMap<String, Object>>> mapRow(ResultSet rs, int rowNum)
+				throws SQLException {
+
+			HashMap<String, DatabaseMapper> map = new HashMap<String, DatabaseMapper>();
+			HashMap<String, Object> mapper = new HashMap<String, Object>();
+			HashMap<String, HashMap<String, HashMap<String, Object>>> lstMapper1 = new HashMap<String, HashMap<String, HashMap<String, Object>>>();
+			HashMap<String, HashMap<String, Object>> lstMapper = new HashMap<String, HashMap<String, Object>>();
+			// user.alias = rs.getString("alias");
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int numberOfColumns = rsmd.getColumnCount();
+			String columnNameArr[] = new String[numberOfColumns-1];
+			int j = 0;
+			//// System.out.println("metaDataLoader" + metaDataLoader);
+			HashMap<String, HashMap<String, String>> mapOutput = Utility.getColumnDataTypeFinal(metaDataLoader,
+					SQLQuery);
+			HashMap<String, String> transMap = new HashMap<String, String>();
+			for (int i = 1; i < numberOfColumns; i++) {
+
+				columnNameArr[j++] = rsmd.getColumnName(i);
+				//// System.out.println("rsmd.getColumnName(i) " +
+				//// rsmd.getColumnName(i));
+			}
+
+			Set set1 = mapOutput.keySet();
+			Iterator irr1 = set1.iterator();
+
+			while (irr1.hasNext()) { // System.out.println(irr1.next());
+				HashMap map1 = mapOutput.get(irr1.next());
+				//
+				/*
+				 * HashMap map1 = (HashMap) irr1.next();
+				 */ Set set2 = map1.keySet();
+				Iterator irr2 = set2.iterator();
+				while (irr2.hasNext()) {
+					String key = irr2.next().toString();
+					String value = map1.get(key).toString();
+					transMap.put(key, value);
+					/// System.out.println("Key " + key + "Values " + value);
+				}
+			}
+			j = 0;
+			int rownum = 0;
+			// mapOutput.get(columnName.toUpperCase()).toString();
+
+			while (rs.next()) {
+
+				mapper = new HashMap<String, Object>();
+				// rownum=rs.getString("rownum");
+				rownum++;
+				//// System.out.println("columnNameArr" + columnNameArr.length);
+
+				/// System.out.println("columnName " + columnName);
+				for (int k = 0; k < columnNameArr.length; k++) {
+
+					String columnName = columnNameArr[k];
+					if (transMap.containsKey(columnName)) {
+						String dataType = transMap.get(columnName).toString();
+						System.out.println("dataType " + dataType + " columnName " + columnName);
+						switch (dataType) {
+						case "integer":
+							// System.out.println("integer");
+
+							mapper.put(columnName, rs.getInt(columnName));
+							break;
+						case "numeric":
+							// System.out.println("numeric");
+							mapper.put(columnName, rs.getDouble(columnName));
+							break;
+						case "character varying":
+							// System.out.println("character varying");
+							mapper.put(columnName, rs.getString(columnName));
+							break;
+						case "date":
+							// System.out.println("Date");
+							mapper.put(columnName, rs.getDate(columnName));
+							break;
+
+						}
+					}
+					lstMapper.put(Integer.toString(rownum), mapper);
+				}
+
+				// map.put(, databaseMapper);
+				// databaseMapper.getMapper().put("rownum",rs.getString("rownum"));
+
+				/* map.add */
+
+			}
+			System.out.println("objectName in DataLoader will be " + objectName);
+			lstMapper1.put(objectName, lstMapper);
+			return lstMapper1;
+
+		}
+
+	};
+
+	public void saveRecord(JDBCTemplate jdbcObject) {
+		String objecName = jdbcObject.getDatabase() + jdbcObject.getUsername() + jdbcObject.gerReportName();		
+		try {
+
+			jdbc = getJDBCConnection(jdbcObject);
+			Object[] params = new Object[] { objecName, jdbcObject.getSql().getBytes() };
+			int[] types = new int[] { Types.VARCHAR, Types.LONGVARBINARY };
+			int row = jdbc.update(Utility.SQL_POST_DB_SQL_QRY, params, types);
+
+			System.out.println("saveRecord: " + row + " row inserted.");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	static String getMetaDataLoader(String redisKey) {
+		try {
+			metaDataLoader = jedis.get(redisKey);
+			return metaDataLoader;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}
+
+	JdbcTemplate getJDBCConnection(JDBCTemplate jdbcObject) {
+		try {
+			JdbcTemplate jdbc = dao.getJdbcTemplate("jdbc:postgresql://" + jdbcObject.getHost() + ":"
+					+ jdbcObject.getPort() + "/" + jdbcObject.getDatabase(), jdbcObject.getUsername(),
+					jdbcObject.getPassword());
+			return jdbc;
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+	
+	
+
+	public void callRedis(String key,String value) throws Exception {
+		try {
+		/*	String value = "";*/
+			/// Jedis jedis = new Jedis("localhost");
+			
+			System.out.println("Call Redissss " + value + " key  " + key);
+			String vcap_services = System.getenv("VCAP_SERVICES");
+			if (vcap_services != null && vcap_services.length() > 0) {
+				// parsing rediscloud credentials
+				JsonRootNode root = new JdomParser().parse(vcap_services);
+				JsonNode rediscloudNode = root.getNode("redis-1");
+				JsonNode credentials = rediscloudNode.getNode(0).getNode("credentials");
+
+				JedisPool pool = new JedisPool(new JedisPoolConfig(), credentials.getStringValue("host"),
+						Integer.parseInt(credentials.getNumberValue("port")), Protocol.DEFAULT_TIMEOUT,
+						credentials.getStringValue("password"));
+
+				Jedis jedis = pool.getResource();
+				jedis.set(key, value);
+				value = jedis.get(key);
+
+				// return the instance to the pool when you're done
+				pool.returnResource(jedis);
+
+			}
+			System.out.println("Successfully Set String in Redis");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			// vcap_services could not be parsed.
+			System.out.println("Failed to Set String in Redis");
+		}
+	}
+}

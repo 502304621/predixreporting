@@ -1,0 +1,7 @@
+applications:
+- name: predix-tool-dataloader-0.0.1
+  path: target/DataLoader-0.0.1.jar
+  memory: 1G
+  services:
+    - predix-poc-postgres-service-instance 
+    - predix-tool-redis-sv 
