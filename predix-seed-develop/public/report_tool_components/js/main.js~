@@ -1,0 +1,136 @@
+
+
+/*************************************options region*********************************************************************/
+var dbObject={"public":{"sb_user":{"name":"character varying","alias":"character varying","id":"integer"},"testtable":{"Name":"ARRAY","link_id":"integer"},"tablink":{"created_dt":"text","user_id":"integer","link_url":"text","link_name":"text","link_id":"integer"}},"poc":{"csa_customer_dtls":{"year":"integer","true_cost":"numeric","customer_name":"character varying","customer_region":"character varying","engine_model":"character varying","last_shop_visit":"date","cust_id":"integer"}}};
+dataBaseList = document.getElementById('data-base-list');
+tableList = document.getElementById('ripos');
+attrList = document.getElementById('show-me');
+conditionAttrList = document.getElementById('condition-attr');
+groupingList = document.getElementById('grouping');
+
+var selectedDb;
+
+for(dbs in dbObject)
+{
+	var opt = document.createElement('option');
+	opt.value = dbs;
+	opt.innerHTML = dbs;
+	dataBaseList.appendChild(opt);
+}
+
+function selectDb(){
+	selectedDb = dataBaseList.value;
+	getTables(selectedDb);
+}
+function getTables(dbName){
+	if(tableList.hasChildNodes()){
+		while (tableList.firstChild) {
+			tableList.removeChild(tableList.firstChild);
+		}
+	}
+	for(tables in dbObject[dbName]){
+		var opt = document.createElement('option');
+		opt.value = tables;
+		opt.innerHTML = tables;
+		tableList.appendChild(opt);
+	}
+}
+function selectTable(){
+	if(attrList.hasChildNodes()){
+		while (attrList.firstChild) {
+			attrList.removeChild(attrList.firstChild);
+			conditionAttrList.removeChild(conditionAttrList.firstChild);
+			groupingList.removeChild(groupingList.firstChild);
+		}
+	}
+	for (tb=0;tb<getQueryForm.ripos.options.length;tb++){
+		if (getQueryForm.ripos.options[tb].selected){
+			for(attrs in dbObject[selectedDb][getQueryForm.ripos.options[tb].value]){
+				var opt = document.createElement('option');
+				var opt1 = document.createElement('option');
+				var opt2 = document.createElement('option');
+			if(matchAttr(attrs,tb)){
+				opt.value = getQueryForm.ripos.options[tb].value+"."+attrs;
+				opt1.value = getQueryForm.ripos.options[tb].value+"."+attrs;
+				opt2.value = getQueryForm.ripos.options[tb].value+"."+attrs;
+			}
+			else{
+				opt.value = attrs;
+				opt1.value = attrs;
+				opt2.value = attrs;
+			}
+				opt.innerHTML = attrs;
+				opt1.innerHTML = attrs;
+				opt2.innerHTML = attrs;
+				attrList.appendChild(opt);
+				conditionAttrList.appendChild(opt1);
+				groupingList.appendChild(opt2);
+			}
+		}
+	}
+	function matchAttr(attribute,jtb){
+		for (var itb=0;itb<getQueryForm.ripos.options.length;itb++){
+			if (getQueryForm.ripos.options[itb].selected){
+				for(Attr in dbObject[selectedDb][getQueryForm.ripos.options[itb].value]){
+					if(itb==jtb) break;
+					if(Attr.localeCompare(attribute)==0)
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+}
+
+
+
+/*************************************start of query generaton************************************************************/
+function generateQuery(){
+	//variable declerations
+	var error=0;
+	var queryObject={
+		"table": querySubStringMultiSelection(getQueryForm.ripos.options),
+		"attribute": querySubStringMultiSelection(getQueryForm.showMe.options),
+		"condition": querySubStringSingleSelection("condition-attr"),
+		"operator": querySubStringSingleSelection("operation"),
+		"inputCondition": document.getElementById("condition-value").value,
+		"grouping": querySubStringSingleSelection("grouping"),
+		"query": function(){
+				return "SELECT "+this.attribute+" FROM "+this.table+" WHERE "+this.condition+" "+this.operator+" '"+this.inputCondition+"' GROUP BY '"+this.grouping+"'";
+			}
+	};
+//sub string in sql from multi selection box
+	function querySubStringMultiSelection(data_long){
+		var tempString="";
+		var index,indexj;
+		
+		if(indexj==data_long.length)
+			return '*';
+		else if(indexj==0)
+			return error;
+		else if(indexj>0 && indexj<data_long.length && data_long==getQueryForm.showMe.options)
+			return attributeMold(data_long);
+		else{
+			for (index=0,indexj=0;index<data_long.length;index++){
+			if (data_long[index].selected){
+				tempString = tempString + data_long[index].value+",";
+				indexj++;
+			}
+		}
+		tempString = tempString+"/";
+		tempString = tempString.split(",/",1);
+			return tempString;
+		}
+		function attributeMold(data_long){
+			var tempString="";
+			
+			
+			}
+	}
+//sub string in sql from single selection box
+	function querySubStringSingleSelection(select_id){
+		var e = document.getElementById(select_id);
+		return e.options[e.selectedIndex].value;
+	}
+	alert(queryObject.query());
+}

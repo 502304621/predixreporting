@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="../bower_components/jquery-ui/jquery-ui.js"></script>
+<script src="../bower_components/jquery/dist/jquery.min.js"></script>
+<script src="../bower_components/jquery/dist/jquery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="../report_tool_components/css/style.css">
+
+<px-card>
+<section onclick="clickHandler(event)" >
+<paper-toolbar><span class="title">TCS Chart Element</span>
+<paper-icon-button type="button" icon="icons:assessment" id="bar" data-dialog="dropdown"></paper-icon-button>
+<paper-icon-button type="button" icon="icons:donut-small" id="bar" ></paper-icon-button>
+<paper-icon-button type="button" icon="icons:trending-up" id="bar" ></paper-icon-button><!-- 
+<paper-icon-button type="button" icon="image:timelapse" id="col"></paper-icon-button>
+<paper-icon-button type="button" icon="editor:insert-chart" id="column"></paper-icon-button> -->
+<paper-button >Generate Chart</paper-button>
+</paper-toolbar>
+<form>
+<paper-dialog id="dropdown">
+<h2>Select values</h2>
+	<!--paper-dropdown-menu label="X-Value">
+		<paper-listbox class="dropdown-content">
+				<paper-item>1</paper-item>
+        		<paper-item>2</paper-item>
+        		<paper-item>3</paper-item>
+        		<paper-item>4</paper-item>
+      </paper-listbox>
+   </paper-dropdown-menu-->
+	<!--paper-dropdown-menu label="Y-Value">
+		<paper-menu class="dropdown-content">
+			<paper-item>1</paper-item>
+			<paper-item>2</paper-item>
+		</paper-menu>
+	</paper-dropdown-menu-->
+	 <div class="form-group row">
+<div id="sbox" class="col-md-6">
+  <label for="sel1">X-Value:</label>
+<select class="form-control" id="sel1">
+  <option>customer_name</option>
+  <option>customer_region</option>
+  <option>engine_model</option>
+</select>
+</div>
+<div id="sbox" class="col-md-6">
+  <label for="sel1">Y-Value:</label>
+  <select class="form-control" id="sel2">
+    <option>true_cost</option>
+  </select>
+</div>
+</div>
+
+	<paper-button dialog-confirm id="ok_button" value="ok" ng-click="generateChart()">OK</paper-button>
+</paper-dialog>
+</form>
+ </section>	
+
+	<div class="row" id="main-chart-div">
+
+
+</px-card>
+
+<script type="text/javascript" src="../report_tool_components/js/chartJS.js"></script>
+

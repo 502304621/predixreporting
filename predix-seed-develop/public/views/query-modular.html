@@ -1,0 +1,50 @@
+<link rel="stylesheet" href="../report_tool_components/css/style.css">
+<px-card id="query-generator-ui">
+	<div class="row padded formBack">
+		<form name="getQueryForm" method="post" onsubmit="return generateQuery()">
+		<div class="span12">
+			<label>Database:</label>
+			<select id="data-base-list" onchange="selectDb()" required><option>Select Database</option></select>
+		</div>
+		<div class="span6">
+			<label>Report Entity:</label>
+			<select name="ripos" id="ripos" onchange="selectTable()" required multiple></select>
+		</div>
+		<div class="span6">
+			<label>Show me:</label>
+			<select name="showMe" id="show-me" required multiple></select>
+		</div>
+		<div class="span1">
+			<label>Where</label>
+		</div>
+		<div class="span11 where" id="where0">
+			<div class="span4">
+				<select name="conditionAttr" id="condition-attr" onchange="validateInput()" required></select>
+			</div>
+			<div class="span3">
+				<select name="operation" id="operation" required>
+  					<option value="=">=</option>
+  					<option value=">">></option>
+  					<option value="<"><</option>
+  					<option value="!=">!=</option>
+  					<option value="<="><=</option>
+  					<option value=">=">>=</option>
+  					<option value="LIKE">LIKE</option>
+				</select>
+			</div>
+			<div class="span4">
+				<input type="text" id="condition-value" required/>
+			</div>
+			<div class="span1">
+			<button type="button" id="add-new-where" onclick="newWhere()">+</button>
+			</div>
+		</div>
+		<div class="span12">
+			<input type="submit" value="Show Query" />
+		</div>;
+		</form>
+		<textarea id="OutputQuery" placeholder="Query ..." style="width:100%"></textarea><br>
+		<button ng-click="executeQuery()">Execute Query</button>
+	</div>
+</px-card>
+<script type="text/javascript" src="../report_tool_components/js/SQLQueryJS.js"></script>

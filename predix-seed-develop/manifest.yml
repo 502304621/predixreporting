@@ -1,0 +1,13 @@
+---
+applications:
+  - name: predix-reporting
+    buildpack: predix_openresty_buildpack
+    path: dist
+    memory: 64M
+    stack: cflinuxfs2
+    services:
+            - predix_reporting_redis
+            - predix_reporting_view
+    env:
+      UAA_SERVER_URL: https://3db154f8-a337-462b-a9f9-e20d2dced3f6.predix-uaa.run.aws-usw02-pr.ice.predix.io
+      REDIS: redis-1

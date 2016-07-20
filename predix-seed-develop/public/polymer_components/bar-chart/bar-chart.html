@@ -1,0 +1,109 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html"/>
+
+<script src="../../bower_components/highstock-release/adapters/standalone-framework.js"></script>
+<script src="../../bower_components/highstock-release/highstock.src.js"></script>
+<script src="../../bower_components/highstock-release/modules/exporting.src.js"></script>
+<script src="../../bower_components/highstock-release/modules/drilldown.src.js"></script>
+<!-- <script src="../../bower_components/annotations/js/annotations.js"></script> -->
+<script src="../../bower_components/moment/min/moment.min.js"></script>
+
+<dom-module id="bar-chart">
+  <template>
+    <figure id="{{divid}}"></figure>
+  </template>
+</dom-module>
+<script type="text/javascript" >
+Polymer({
+    is: 'bar-chart',
+
+properties: {
+divid: {
+type: String
+},
+title: {
+type: String
+},
+subtitle: {
+type: String
+},
+data: {
+type: Object
+},
+drilldowndata: {
+type: Object
+},
+type: {
+type: String
+}
+},
+/*ready: function(){
+alert("this is "+this.drilldowndata[0].names);
+},*/
+
+    attached : function() {
+    new Highcharts.Chart({
+        chart: {
+            type: this.type,
+            renderTo : this.divid
+        },
+        title: {
+            text: this.title
+        },
+        subtitle: {
+            text: this.subtitle
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total <br>'
+        }, 
+
+        series: [{
+            name: 'Brands',
+            colorByPoint: true,
+            data: this.data
+ 
+        }],
+        drilldown: {
+            /*series: [{
+                name: this.drilldowndata[0].names,
+                id: this.drilldowndata[0].id,
+                data: this.drilldowndata[0].data
+            }, {
+                name: this.drilldowndata[1].names,
+                id: this.drilldowndata[1].id,
+                data: this.drilldowndata[1].data
+            }, {
+                name: this.drilldowndata[2].names,
+                id: this.drilldowndata[2].id,
+                data: this.drilldowndata[2].data
+            }]*/
+            series: this.drilldowndata
+        }
+    });
+  }
+});
+</script>
+<!--
+
+

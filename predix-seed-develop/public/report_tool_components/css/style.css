@@ -1,0 +1,50 @@
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857;
+    color: inherit;
+    background-color: inherit;
+}
+
+.shape{
+	width: 100px;
+	}
+.span6{
+	width: 50%;
+	float: left;
+	}
+.span3{
+	width: 25%;
+	float: left;
+	}
+.span9{
+	width: 75%;
+	float: left;
+	}
+.span12{
+	width: 100%;
+	float: left;
+	}
+.padded{
+	padding: 10px 25px 10px 25px;
+	}
+.chart{
+	border-style: outset;
+	}
+	
+input[type=text],select,input[type=number]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    outline: none;
+}
+
+input[type=text]:focus ,select:focus {
+    background-color: lightblue;
+}
+#sbox {
+    width: 15em;
+}
+	

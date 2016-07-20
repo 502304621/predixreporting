@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="../report_tool_components/css/style.css">
+<blank-card id="query-generator-ui">
+<div class="row">
+<form name="getQueryForm" method="post" onsubmit="generateQuery()">
+<div class="span12">
+<select id="data-base-list" onchange="selectDb()"><option>Select Database</option></select>
+</div>
+<div class="span6">
+Report Entity:
+<select name="ripos" id="ripos" class="shape" onchange="selectTable()" multiple>
+</select><br>
+</div>
+<div class="span6">
+Show me:
+<select name="showMe" class="shape" id="show-me" multiple>
+</select><br>
+</div>
+<div class="span6">
+Where
+<select name="conditionAttr" class="shape" id="condition-attr">
+</select>
+<select name="operation" class="shape" id="operation">
+  <option value="=">=</option>
+  <option value=">">></option>
+  <option value="<"><</option>
+  <option value="LIKE">LIKE</option>
+</select>
+<input type="text" class="shape" id="condition-value" />
+</div>
+<div class="span6">
+Group by
+<select name="grouping" class="shape" id="grouping">
+</select>
+<input type="submit" value="Show Report" />
+</div>
+</form>
+</div>
+</blank-card>
+<script type="text/javascript" src="../report_tool_components/js/main.js"></script>

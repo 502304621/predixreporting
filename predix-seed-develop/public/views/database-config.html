@@ -1,0 +1,126 @@
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="views/styles.css">
+
+<body>
+  <div id="parent" class="col-sm-12 " ng-controller="DBController">
+    <div class="row" id="main"  >
+      <div id="frame1" class="col-sm-3" >
+        <div class="well well-sm1 fixed-well">
+          <div class="container-fluid">
+            <h3><span class="label label-primary ">Database Browser</span></h3>
+            <p>
+              <div class="container-fluid">
+                <div >
+                  
+                  
+                  <div class="form-group pull-left">
+                    
+                    <label id="label1" class="control-label" for="Database">Databases:</label>
+                    <ul class="dblist">
+                      <div id="database" ng-repeat="(database, table) in databases">
+                        <li><input type="checkbox" ng-model="tables" /> {{database}}</li>
+                        
+                        
+                        
+                        <ul class="dblist">
+                          <div id="table" ng-show="tables" ng-repeat="(table,column) in table">
+                            <li><input type="checkbox" ng-model="columns" /> {{table}}</li>
+                            
+                            
+                            
+                            <ul class="dblist">
+                              <div id="column" ng-show="tables && columns"  ng-repeat="(column,value) in column">
+                                <li> {{column}}</li>
+                              </div>
+                            </ul>
+                          </div>
+                        </ul>
+                        
+                      </div>
+                    </ul>
+                  </div>
+                  <button ng-click="createQuery()" ng-if="databases">Create Query</button>
+                  
+                </div>
+              </div>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div id="frame2" class="col-sm-9 " >
+        <div class="container-fluid">
+          <form class="form-horizontal" role="form">
+            
+            <div class="row">
+              <div id="group1" class="col-sm-12 well well-sm" >
+                
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="ConnectionName">Connection Name:</label>
+                  <div class="col-sm-10"> <input is="iron-input" class="form-control" id="ConnectionName" ng-model="name"></div>
+                  
+                </div>
+                
+                
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="Username">Username:</label>
+                  <div class="col-sm-10"><input is="iron-input" class="form-control" id="Username" ng-model="newconn.username"></div>
+                </div>
+                
+                
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="Username">Password:</label>
+                  <div class="col-sm-10"> <input is="iron-input" type="password" class="form-control" id="Password" ng-model="newconn.password"></div>
+                </div>
+                
+                
+              </div>
+              
+              <div id="group2" class="col-sm-12">
+                
+                
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="Hostname">Hostname:</label><div class="col-sm-10"> <input is="iron-input"  class="form-control" id="Hostname" ng-model="newconn.host">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="Port">Port:</label><div class="col-sm-10"> <input is="iron-input"  class="form-control" id="Port" ng-model="newconn.port">
+              </div>
+            </div>
+            
+            
+            
+          </div>
+          
+          <div id="group3" class="row">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="row col-md-12">
+                  <!-- <div class="col-sm-offset-1 col-sm-2">
+                  <paper-button raised>Save</paper-button>
+                </div>-->
+                
+              <!-- <div class="col-sm-2">
+              <paper-button raised>Test</paper-button>
+            </div> -->
+            <div class="col-sm-offset-3 col-sm-2">
+            <paper-button raised ng-click="connect()" >Connect</paper-button>
+          </div>
+          <div class=" col-sm-2">
+                <paper-button raised ng-click="reset()" >Clear</paper-button>
+              </div>
+          <div class="col-sm-2">
+          <paper-button raised ng-click="reset()">Cancel</paper-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ PostDataResponse }}
+</form>
+</div>
+</div>
+</div>
+</div>
+
+</body>

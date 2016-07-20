@@ -1,0 +1,122 @@
+
+body {
+  font-family: Roboto, sans-serif;
+  color: #333;
+  margin: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  background-color:inherit;
+}
+#parent{
+max-height: inherit;
+min-height: inherit;
+margin: inherit;
+padding: inherit;} 
+
+#main {
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #333;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 35px;
+    padding-bottom: 20px;
+}
+
+
+a, a:hover {
+  text-decoration: none;
+}
+
+
+
+paper-button {
+  margin: 0.5em 1em 0.5em 0;
+  width: -moz-max-content;
+}
+
+paper-button[right] {
+  position: fixed;
+  right: 0;
+  width: -moz-max-content;
+}
+
+/*paper-checkbox {
+  margin-left: 1em;
+}*/
+
+paper-fab {
+  position: absolute !important;
+  top: 35px;
+  right: 1em;
+  z-index: 1;
+}
+
+paper-tabs {
+  background-color: #5677fc;
+  color: #fff;
+}
+
+paper-tabs paper-tab.iron-selected {
+  color: #ffff8d;
+}
+#group1: {display:block;
+}
+#group2: {display:block;
+}
+#group3: {display:block;
+}
+.form-horizontal .checkbox {
+    padding-top: 30px;
+}
+
+#R,#C{
+    padding-top: 10px;
+}
+
+.well{
+padding: 9px;
+}
+
+.well-sm {
+    padding-top: 30px;
+	background-color:rgba(8, 110, 135, 0.76);
+   margin-top: 15px;
+   border-radius: 6px;
+}
+.well-sm1 {
+    padding-top: 30px;
+	background-color: darkgrey;
+}
+ .paper-button-0[animated] {
+    background-color:#333;;
+    width: -moz-max-content;
+    color: white;
+    
+
+ }
+.label-primary {
+    background-color: #333;
+    padding: 5px;
+    margin: inherit;
+}
+ul.dblist:not([style-scope]):not(.style-scope), ol:not([style-scope]):not(.style-scope), dd:not([style-scope]):not(.style-scope){
+ margin-left: -2rem;
+}
+
+.fixed-well {
+  min-height: 30em;
+  max-height: 30em;
+  overflow-y: scroll;
+}
+
+
+
+
+
